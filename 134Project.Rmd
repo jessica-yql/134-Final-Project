@@ -5,5 +5,7 @@ editor_options:
 ---
 
 ```{r}
-print("hello world") 
+hello <- print("hello world") 
 ```
+
+
