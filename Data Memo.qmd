@@ -1,0 +1,99 @@
+---
+title: "Data Memo"
+format: html
+editor: visual
+---
+
+## Quarto
+
+Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
+
+```{r}
+library(readr)
+amazon <- read_csv("~/Desktop/Pstat 134/Final/amazon.csv")
+
+which(is.na(amazon))
+sum(is.na(amazon))
+```
+
+## **An overview of your dataset**
+
+What does it include?
+
+-   This dataset includes information for over 1,000 Amazon products, including their ratings, reviews, pricing, discounts, and descriptive details.
+
+Where and how will you be obtaining it? Include the link and source. If you plan on creating a web scraper or using an API, describe your plans.
+
+-   <https://www.kaggle.com/datasets/karkavelrajaj/amazon-sales-dataset> 
+
+About how many observations? How many predictors?
+
+-   The dataset includes **1,000+ observations**, representing Amazon products. The dataset includes **16 features**, such as:
+
+    -   product_id, product_name, category, discounted_price, rating, rating_count, review_title, etc
+
+What types of variables will you be working with?
+
+-   We will work with category, discounted_price, rating, actual_price
+
+-   Once we start and we find that another variable is useful, we will use it as well. 
+
+Is there any missing data? About how much? Do you have an idea for how to handle it?
+
+-   This data set does not contain too much missing data. Only 3 missing data, from that we will manually fill out the missing data.
+
+## **An overview of your research question(s)**
+
+What variable(s) are you interested in predicting? What question(s) are you interested in answering?
+
+-   The variable we are interested in predicting is product_name.
+
+-   Questions
+
+    -   What products are similar to what a user has already bought?
+
+    -   What products might a user purchase next?
+
+Name your response/outcome variable(s) and briefly describe it/them.
+
+-   For a recommendation system: Focus on rating or review_content.
+
+-   For pricing analysis: Use discounted_price or discount_percentage.
+
+Which predictors do you think will be especially useful?
+
+-   User ID: Key for identifying individual preferences and enabling personalized recommendations.
+
+-   Ratings/Reviews: Indicates user sentiment towards products. Collaborative filtering often uses this information to predict preferences.
+
+Is the goal of your model descriptive, predictive, inferential, or a combination? Explain.
+
+-   The goal of the model is predictive as it is a recommendation system. It is predictive as it is used to recommend products users are likely to interact with.
+
+## **Your proposed project timeline**
+
+When do you plan on having your data set loaded, beginning your exploratory data analysis, etc?
+
+-   We plan to have the data set loaded in week 4 and start exploratory data analysis week 4-5.
+
+Provide a general timeline for the rest of the quarter.
+
+-   Week 4: Load data set. Build the skeleton and ensure basis of our project, who works on what and how we share code
+
+-   Week 5-6: continue with the code compare prices and ratings
+
+-   Week 7-8: Report findings and Make it pretty and presentable
+
+-   Week 9: OH make sure runs smoothly 
+
+## **Any questions or concerns**
+
+Are there any problems or difficult aspects of the project you anticipate?
+
+-   I think some problems we will run into would be using gibhut, since no one in our team has used it before. It will definitely will be a learning curve.
+
+-   Another difficult aspect would be using python. Since most of us has only worked in projects with R so doing a big project in python will be difficult.
+
+Any specific questions you have for me/the instructional team?
+
+-   will we be shown how to use github as a team to push and pull our code?
