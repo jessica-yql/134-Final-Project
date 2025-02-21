@@ -2,3 +2,38 @@
 title: "134 Final Project"
 format: html
 ---
+```{r}
+library(tidyverse)
+library(dplyr)
+
+# load the data set
+amazon <- read.csv("data/amazon.csv")
+```
+
+```{r}
+summary(amazon)
+colSums(is.na(amazon))
+```
+```{r}
+# Mutate character variables into numeric
+amazon$discounted_price <- as.numeric(gsub("[^0-9.]", "", amazon$discounted_price))
+amazon$actual_price <- as.numeric(gsub("[^0-9.]", "", amazon$actual_price))
+amazon$discount_percentage <- as.numeric(gsub("[^0-9]", "", amazon$discount_percentage))
+amazon$rating_count <- as.numeric(gsub("[^0-9.]", "", amazon$rating_count))
+
+# Find non-numeric rating values
+print(amazon$rating[grepl("[^0-9.]", amazon$rating)])
+
+amazon <- amazon %>% 
+  filter(grepl("^[0-9.]", rating)) %>% 
+  filter(!is.na(rating_count)) %>% 
+  mutate(rating = as.numeric(rating))
+
+# Confirm no missing
+colSums(is.na(amazon))
+
+```
+```{r}
+summary(amazon)
+```
+
