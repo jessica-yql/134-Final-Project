@@ -14,6 +14,7 @@ amazon <- read.csv("data/amazon.csv")
 summary(amazon)
 colSums(is.na(amazon))
 ```
+
 ```{r}
 # Mutate character variables into numeric
 amazon$discounted_price <- as.numeric(gsub("[^0-9.]", "", amazon$discounted_price))
@@ -31,8 +32,8 @@ amazon <- amazon %>%
 
 # Confirm no missing
 colSums(is.na(amazon))
-
 ```
+posssible pca, nlp usage
 ```{r}
 summary(amazon)
 ```
