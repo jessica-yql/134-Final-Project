@@ -11,43 +11,46 @@ editor_options:
   markdown: 
     wrap: sentence
 ---
-# Introduction
 
+# **Introduction to the Recommendation System Project**
 
-# Data Description
+## Project Overview
 
+In this project, our group aims to develop a recommendation system using an Amazon dataset to enhance user experience by providing personalized product recommendations.
+With the vast amount of data available in e-commerce, recommendation systems play a crucial role in helping users discover relevant products efficiently.
+By leveraging machine learning techniques, we aim to build a model that predicts user preferences based on historical interactions and product attributes.
 
-# Methodology
+## Data Description
 
+## Methodology
 
-# Project Road Map
+## Project Road Map
 
-
-# Exploring Our Data
-
+## Exploring Our Data
 
 ## Loading Packages
+
 ```{r}
 library(tidyverse)
 library(dplyr)
-
-
 ```
 
 ## Loading in the Dataset
+
 ```{r}
 # load the data set
 amazon <- read.csv("data/amazon.csv")
 ```
 
-
 ## Exploring Raw Data
+
 ```{r}
 summary(amazon)
 colSums(is.na(amazon))
 ```
 
 ## Tidying the Data
+
 ```{r}
 # Mutate character variables into numeric
 amazon$discounted_price <- as.numeric(gsub("[^0-9.]", "", amazon$discounted_price))
@@ -75,4 +78,4 @@ summary(amazon)
 
 ## Visual EDA
 
-#
+# 
