@@ -22,11 +22,39 @@ By leveraging machine learning techniques, we aim to build a model that predicts
 
 ## Data Description
 
+We obtain our data set on Kalggles.
+The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings.
+We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**.
+These variables will help us analyze user preferences and product recommendations effectively.
+This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
+
 ## Methodology
 
-## Project Road Map
+**Methodology Summary for Recommendation Systems**
 
-## Exploring Our Data
+There are two primary types of recommendation systems:
+
+1\.
+**Content-Based Filtering (Chosen for Our Project)**
+
+-   Content-based recommendation systems use product attributes to suggest similar items to users.
+
+-   Each product's features (e.g., category, price, description, and ratings) are transformed into numerical vectors.
+
+-   The similarity between items is computed using **cosine similarity**, which measures how closely related two products are based on their feature vectors.
+
+-   The system recommends items that are most similar to those the user has previously interacted with
+
+2\.
+**Collaborative Filtering**
+
+-   This method relies on user interactions (ratings, reviews) to find patterns among users or items.
+
+-   It can be **user-based**, where users with similar preferences are grouped together, or **item-based**, where products with similar rating patterns are recommended.
+
+-   Cosine similarity is also used in this method to determine relationships between users or items.
+
+# Exploring Our Data
 
 ## Loading Packages
 
