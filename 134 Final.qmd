@@ -61,6 +61,7 @@ There are two primary types of recommendation systems:
 ```{r}
 library(tidyverse)
 library(dplyr)
+<<<<<<< Updated upstream
 library(tidytext)
 library(tm)
 library(wordcloud)
@@ -73,6 +74,10 @@ library(word2vec)
 library(umap)
 library(plotly)
 library(kableExtra)
+=======
+library(ggplot2)
+
+>>>>>>> Stashed changes
 ```
 
 ## Loading in the Dataset
