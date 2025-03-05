@@ -61,6 +61,18 @@ There are two primary types of recommendation systems:
 ```{r}
 library(tidyverse)
 library(dplyr)
+library(tidytext)
+library(tm)
+library(wordcloud)
+library(ggplot2)
+library(igraph)
+library(ggraph)
+library(textdata)
+library(reshape2)
+library(word2vec)
+library(umap)
+library(plotly)
+library(kableExtra)
 ```
 
 ## Loading in the Dataset
@@ -106,4 +118,62 @@ summary(amazon)
 
 ## Visual EDA
 
-# 
+### NLP graphs:
+```{r}
+# Select relevant columns and clean it
+# there is no missing value
+amazon <- amazon %>%
+  select(review_title) %>%
+  mutate(review_title = tolower(review_title) %>% str_replace_all('[[:punct:]]', ''))
+
+# Tokenization
+amazon_tokens <- amazon %>%
+  unnest_tokens(word, review_title)
+
+
+# Remove stop words
+data("stop_words")
+
+amazon_clean <- amazon_tokens %>%
+  anti_join(stop_words, by = "word")
+
+# Plot the most Common Words
+top_words <- amazon_clean %>%
+  count(word, sort = TRUE) %>%
+  head(20)
+
+ggplot(top_words, aes(x = reorder(word, n), y = n)) +
+  geom_col(fill = "skyblue") +
+  coord_flip() +
+  labs(title = "Top 20 Most Common Words in Review Titles", x = "Words", y = "Frequency") +
+  theme_minimal()
+
+# Clean
+amazon_clean %>%
+  count(word) %>%
+  with(wordcloud(word, n, max.words = 100, scale = c(4, 0.5), colors = brewer.pal(8, "Dark2")))
+
+# Sentiment Analysis
+amazon_sentiment <- amazon_clean %>%
+  inner_join(get_sentiments("bing"), by = "word") %>%
+  count(word, sentiment, sort = TRUE)
+
+amazon_sentiment %>%
+  acast(word ~ sentiment, value.var = "n", fill = 0) %>%
+  comparison.cloud(colors = c("red", "blue"), max.words = 100)
+
+# Most common Bigrams
+amazon_bigrams <- amazon %>%
+  unnest_tokens(bigram, review_title, token = "ngrams", n = 2) %>%
+  separate(bigram, into = c("word1", "word2"), sep = " ", remove = FALSE) %>%
+  filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word)
+
+amazon_bigrams %>%
+  count(bigram, sort = TRUE) %>%
+  head(20) %>%
+  ggplot(aes(x = reorder(bigram, n), y = n)) +
+  geom_col(fill = "coral") +
+  coord_flip() +
+  labs(title = "Top 20 Most Common Bigrams", x = "Bigrams", y = "Count")
+
+```
