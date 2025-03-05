@@ -105,5 +105,3 @@ summary(amazon)
 ```
 
 ## Visual EDA
-
-# 
