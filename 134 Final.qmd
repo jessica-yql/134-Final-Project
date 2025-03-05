@@ -122,6 +122,7 @@ summary(amazon)
 ```
 
 ## Visual EDA
+<<<<<<< HEAD
 
 ### NLP graphs:
 ```{r}
@@ -182,3 +183,5 @@ amazon_bigrams %>%
   labs(title = "Top 20 Most Common Bigrams", x = "Bigrams", y = "Count")
 
 ```
+=======
+>>>>>>> 0f87d12af10d4ecd154e9d1ceaacb8f35ede2ea1
