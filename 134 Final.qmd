@@ -48,12 +48,10 @@ There are two primary types of recommendation systems:
 
 # Exploring Our Data
 
-## Loading Packages
-
 ```{r}
 library(tidyverse)
 library(dplyr)
-# <<<<<<< Updated upstream
+library(reticulate)
 library(tidytext)
 library(tm)
 library(wordcloud)
@@ -66,27 +64,14 @@ library(word2vec)
 library(umap)
 library(plotly)
 library(kableExtra)
-# =======
-library(ggplot2)
-
-# >>>>>>> Stashed changes
-```
-
-## Loading in the Dataset
-
-```{r}
 # load the data set
 amazon <- read.csv("data/amazon.csv")
 ```
-
-## Exploring Raw Data
 
 ```{r}
 summary(amazon)
 colSums(is.na(amazon))
 ```
-
-## Tidying the Data
 
 ```{r}
 # Mutate character variables into numeric
@@ -106,11 +91,107 @@ amazon <- amazon %>%
 # Confirm no missing
 colSums(is.na(amazon))
 ```
-
 posssible pca, nlp usage
-
 ```{r}
 summary(amazon)
+```
+```{r}
+remove <- c('[[:punct:]]',
+            '[[:symbol:]]'
+            ) %>%
+  paste(collapse = '|')
+amazon$category <- amazon$category %>% 
+  str_replace_all(remove, ' ') %>%
+  str_replace_all("([a-z])([A-Z])", "\\1 \\2") %>%
+  tolower() %>%
+  str_replace_all("\\s+", " ")
+```
+
+
+```{r}
+amazon_user_index <- amazon %>% 
+  separate_rows(user_name, sep=",")
+user_counts <- amazon_user_index %>% 
+  count(user_name, name = "purchase_count") %>% 
+  filter(purchase_count > 1)
+amazon_multiple_purchases <- amazon_user_index %>% 
+  semi_join(user_counts, by = "user_name")
+```
+
+```{r}
+write.csv(amazon, file = "data/cleaned_amazon.csv", row.names = FALSE)
+write.csv(amazon_multiple_purchases, file = "data/amazon_multiple_purchases.csv", row.names = FALSE)
+write.csv(amazon_user_index, file = "data/amazon_user_index.csv", row.names = FALSE)
+write.csv(user_counts, file = "data/user_counts.csv", row.names = FALSE)
+```
+
+
+```{r}
+amazon$product_name[1]
+py$amazon <- amazon
+py$amazon_multiple_purchases = amazon_multiple_purchases
+py$amazon_user_index = amazon_user_index
+py$user_counts = user_counts
+```
+
+
+```{python}
+import pandas as pd
+import numpy as np
+import re
+import warnings
+warnings.filterwarnings('ignore')
+```
+
+```{r}
+use_virtualenv("/Users/jessicaliu/.virtualenvs/r-reticulate")
+py_run_string("
+import pandas as pd
+amazon = pd.read_csv('data/cleaned_amazon.csv')
+")
+```
+
+```{python}
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+tfv = TfidfVectorizer(min_df=3, max_features=None, strip_accents="unicode", analyzer="word",
+                      token_pattern=r"\w{1,}", ngram_range=(1, 3), stop_words="english")
+
+rec_data = amazon.copy()
+rec_data.drop_duplicates(subset="product_id", keep="first", inplace=True)
+rec_data.reset_index(drop=True, inplace=True)
+
+category = rec_data["category"].astype(str)
+tfv_matrix = tfv.fit_transform(category)
+```
+```{python}
+from sklearn.metrics.pairwise import sigmoid_kernel
+sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
+rec_indices = pd.Series(rec_data.index, index = rec_data["product_name"]).drop_duplicates()
+```
+```{python}
+def give_recommendation(product_name, sig = sig):
+    
+    idx = rec_indices[product_name]
+
+    sig_score = list(enumerate(sig[idx]))
+    sig_score = sorted(sig_score, key=lambda x: x[1], reverse=True)
+    sig_score = sig_score[1:11]
+    product_indices = [i[0] for i in sig_score]
+     
+    # Top 10 most similar anime
+    rec_dic = {"No" : range(1,11), 
+               "Product Name" : amazon["product_name"].iloc[product_indices].values,
+               "Rating" : amazon["rating"].iloc[product_indices].values}
+    dataframe = pd.DataFrame(data = rec_dic)
+    dataframe.set_index("No", inplace = True)
+    
+    print(f"Recommendations for {product_name} buyers :\n")
+    
+    return dataframe
+```
+```{python}
+give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Data Sync Cable Compatible for iPhone 13, 12,11, X, 8, 7, 6, 5, iPad Air, Pro, Mini (3 FT Pack of 1, Grey)")
 ```
 
 ## Visual EDA
@@ -176,4 +257,3 @@ amazon_bigrams %>%
 
 ```
 =======
-\>\>\>\>\>\>\> 0f87d12af10d4ecd154e9d1ceaacb8f35ede2ea1
