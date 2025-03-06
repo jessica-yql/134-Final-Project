@@ -114,7 +114,7 @@ summary(amazon)
 ```
 
 ## Visual EDA
-<<<<<<< HEAD
+\<\<\<\<\<\<\< HEAD
 
 ### NLP graphs:
 ```{r}
@@ -176,4 +176,4 @@ amazon_bigrams %>%
 
 ```
 =======
->>>>>>> 0f87d12af10d4ecd154e9d1ceaacb8f35ede2ea1
+\>\>\>\>\>\>\> 0f87d12af10d4ecd154e9d1ceaacb8f35ede2ea1
