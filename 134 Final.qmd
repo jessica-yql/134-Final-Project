@@ -179,7 +179,7 @@ def give_recommendation(product_name, sig = sig):
     sig_score = sig_score[1:11]
     product_indices = [i[0] for i in sig_score]
      
-    # Top 10 most similar anime
+    # Top 10 most similar products
     rec_dic = {"No" : range(1,11), 
                "Product Name" : amazon["product_name"].iloc[product_indices].values,
                "Rating" : amazon["rating"].iloc[product_indices].values}
@@ -201,12 +201,12 @@ give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Dat
 ```{r}
 # Select relevant columns and clean it
 # there is no missing value
-amazon <- amazon %>%
+amazon_review_title <- amazon %>%
   select(review_title) %>%
   mutate(review_title = tolower(review_title) %>% str_replace_all('[[:punct:]]', ''))
 
 # Tokenization
-amazon_tokens <- amazon %>%
+amazon_tokens <- amazon_review_title %>%
   unnest_tokens(word, review_title)
 
 
@@ -242,7 +242,7 @@ amazon_sentiment %>%
   comparison.cloud(colors = c("red", "blue"), max.words = 100)
 
 # Most common Bigrams
-amazon_bigrams <- amazon %>%
+amazon_bigrams <- amazon_review_title %>%
   unnest_tokens(bigram, review_title, token = "ngrams", n = 2) %>%
   separate(bigram, into = c("word1", "word2"), sep = " ", remove = FALSE) %>%
   filter(!word1 %in% stop_words$word, !word2 %in% stop_words$word)
