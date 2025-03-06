@@ -144,7 +144,6 @@ warnings.filterwarnings('ignore')
 ```
 
 ```{r}
-use_virtualenv("/Users/jessicaliu/.virtualenvs/r-reticulate")
 py_run_string("
 import pandas as pd
 amazon = pd.read_csv('data/cleaned_amazon.csv')
@@ -169,6 +168,7 @@ from sklearn.metrics.pairwise import sigmoid_kernel
 sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
 rec_indices = pd.Series(rec_data.index, index = rec_data["product_name"]).drop_duplicates()
 ```
+
 ```{python}
 def give_recommendation(product_name, sig = sig):
     
