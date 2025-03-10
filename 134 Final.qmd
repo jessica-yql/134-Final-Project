@@ -36,7 +36,7 @@ There are two primary types of recommendation systems:
 
 -   It can be **user-based**, where users with similar preferences are grouped together, or **item-based**, where products with similar rating patterns are recommended.
 
--   Cosine similarity is also used in this method to determine relationships between users or items.
+-   Sigmoid Kernel similarity is also used in this method to determine relationships between users or items.
 
 # Exploring Our Data
 
@@ -286,6 +286,8 @@ give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Dat
 ```
 
 # Item-Item Similarity Recommender System
+
+gives recommendations based on items that have been bought together.
 
 ```{python}
 user_item_matrix = pd.crosstab(multiple_purchases['user_name'], multiple_purchases['product_name'])
