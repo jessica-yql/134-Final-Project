@@ -12,7 +12,7 @@ In this project, our group aims to develop a recommendation system using an Amaz
 
 ## Data Description
 
-We obtain our data set on Kalggles. The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings. We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**. These variables will help us analyze user preferences and product recommendations effectively. This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
+We obtain our data set on Kaggle. The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings. We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**. These variables will help us analyze user preferences and product recommendations effectively. This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
 
 ## Methodology
 
@@ -40,7 +40,7 @@ There are two primary types of recommendation systems:
 
 # Exploring Our Data
 
-```{r}
+```{r, message=F}
 library(tidyverse)
 library(dplyr)
 library(reticulate)
@@ -56,6 +56,7 @@ library(word2vec)
 library(umap)
 library(plotly)
 library(kableExtra)
+
 # load the data set
 amazon <- read.csv("data/amazon.csv")
 ```
@@ -232,6 +233,7 @@ import numpy as np
 import re
 import warnings
 import random
+
 warnings.filterwarnings('ignore')
 amazon = pd.read_csv('data/cleaned_amazon.csv')
 multiple_purchases = pd.read_csv('data/amazon_multiple_purchases.csv')
