@@ -304,12 +304,6 @@ item_similarity_df = pd.DataFrame(item_similarity,
                                   columns=user_item_matrix.columns)
 ```
 
-```{r}
-row_data <- amazon_multiple_purchases %>%
-  filter(user_name == 'Abhishek')
-
-print(row_data)
-```
 
 ```{python}
 def get_similar_items(item, item_similarity_df, top_n=10):
