@@ -160,6 +160,40 @@ amazon_bigrams %>%
 ```
 =======
 
+### Price vs. Discount Percentage
+
+```{r}
+ggplot(amazon, aes(x = actual_price, y = discount_percentage)) +
+  geom_point(alpha = 0.6, color = "red") +
+  scale_x_continuous(labels = scales::comma) +
+  labs(title = "Price vs. Discount Percentage", 
+       x = "Actual Price (₹)", 
+       y = "Discount (%)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+The warning message indicates that 934 rows were removed due to missing values or values outside the expected range.
+This likely means that some values in actual_price or discount_percentage are NA or improperly formatted.
+
+Price vs. Discount Percentage graph shows the relationship between a product's actual price and the discount percentage it receives.
+
+-   Key Observations:
+
+    -   Many discounts are grouped around ₹500, and ₹1000, suggesting that retailers tend to apply similar discount strategies for certain price ranges.
+
+    -   Higher Prices Have Higher Discount
+
+        -   This suggests that expensive products often receive bigger percentage discounts, likely to make them more attractive
+
+    -   Low Prices Have Lower Discounts
+
+        -   Products under ₹250 mostly have discounts below 25%, indicating that cheaper items may already be priced competitively.
+
+    -   Outliers
+
+        -   There are some high-discount outliers at lower price levels, which could be clearance sales or special promotions.
+
 ```{r}
 remove <- c('[[:punct:]]',
             '[[:symbol:]]'
