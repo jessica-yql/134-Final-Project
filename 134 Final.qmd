@@ -8,17 +8,11 @@ date: "2025-02-27"
 
 ## Project Overview
 
-In this project, our group aims to develop a recommendation system using an Amazon dataset to enhance user experience by providing personalized product recommendations.
-With the vast amount of data available in e-commerce, recommendation systems play a crucial role in helping users discover relevant products efficiently.
-By leveraging machine learning techniques, we aim to build a model that predicts user preferences based on historical interactions and product attributes.
+In this project, our group aims to develop a recommendation system using an Amazon dataset to enhance user experience by providing personalized product recommendations. With the vast amount of data available in e-commerce, recommendation systems play a crucial role in helping users discover relevant products efficiently. By leveraging machine learning techniques, we aim to build a model that predicts user preferences based on historical interactions and product attributes.
 
 ## Data Description
 
-We obtain our data set on Kalggles.
-The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings.
-We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**.
-These variables will help us analyze user preferences and product recommendations effectively.
-This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
+We obtain our data set on Kalggles. The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings. We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**. These variables will help us analyze user preferences and product recommendations effectively. This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
 
 ## Methodology
 
@@ -26,8 +20,7 @@ This data set provides valuable insights into consumer behavior, product popular
 
 There are two primary types of recommendation systems:
 
-1\.
-**Content-Based Filtering (Chosen for Our Project)**
+1\. **Content-Based Filtering (Chosen for Our Project)**
 
 -   Content-based recommendation systems use product attributes to suggest similar items to users.
 
@@ -37,8 +30,7 @@ There are two primary types of recommendation systems:
 
 -   The system recommends items that are most similar to those the user has previously interacted with
 
-2\.
-**Collaborative Filtering**
+2\. **Collaborative Filtering**
 
 -   This method relies on user interactions (ratings, reviews) to find patterns among users or items.
 
@@ -91,16 +83,19 @@ amazon <- amazon %>%
 # Confirm no missing
 colSums(is.na(amazon))
 ```
+
 posssible pca, nlp usage
+
 ```{r}
 summary(amazon)
 ```
 
-
 ## Visual EDA
+
 \<\<\<\<\<\<\< HEAD
 
 ### NLP graphs:
+
 ```{r}
 # Select relevant columns and clean it
 # there is no missing value
@@ -158,11 +153,15 @@ amazon_bigrams %>%
   coord_flip() +
   labs(title = "Top 20 Most Common Bigrams", x = "Bigrams", y = "Count")
 ```
+
 =======
 
 ### Price vs. Discount Percentage
 
 ```{r}
+amazon_filtered <- amazon %>%
+  filter(!is.na(actual_price) & !is.na(discount_percentage))
+
 ggplot(amazon_filtered, aes(x = actual_price, y = discount_percentage)) +
   geom_point(alpha = 0.5, color = "red") +
   scale_x_log10(labels = scales::comma) +  # Log scale for better spacing
@@ -174,24 +173,24 @@ ggplot(amazon_filtered, aes(x = actual_price, y = discount_percentage)) +
 ```
 
 Price vs. Discount Percentage graph shows the relationship between a product's actual price and the discount percentage it receives.
+
 X-axis: Actual Price (₹) (Log Scale) – Product prices are shown on a logarithmic scale, making it easier to see patterns across different price ranges.
+
 Y-axis: Discount (%) – The percentage discount applied to each product.
 
--   Key Observations:
+-   Products at all price points receive discounts, but higher-priced products show more variation in discounts.
 
-    -   Products at all price points receive discounts, but higher-priced products show more variation in discounts.
+Higher Prices Have More Discount
 
-    -   Higher Prices Have Higher Discount
+-   This suggests that expensive products often receive more discounts, likely to make them more attractive
 
-        -   This suggests that expensive products often receive bigger percentage discounts, likely to make them more attractive
+Low Prices Have Lower Discounts
 
-    -   Low Prices Have Lower Discounts
+-   Indicating that cheaper items may already be priced competitively.
 
-        -   Products under ₹250 mostly have discounts below 25%, indicating that cheaper items may already be priced competitively.
+Outliers
 
-    -   Outliers
-
-        -   There are some high-discount outliers at lower price levels, which could be clearance sales or special promotions.
+-   There are some high-discount outliers at lower price levels, which could be clearance sales or special promotions.
 
 ```{r}
 remove <- c('[[:punct:]]',
@@ -204,7 +203,6 @@ amazon$category <- amazon$category %>%
   tolower() %>%
   str_replace_all("\\s+", " ")
 ```
-
 
 ```{r}
 amazon_user_index <- amazon %>% 
@@ -222,7 +220,6 @@ write.csv(amazon_multiple_purchases, file = "data/amazon_multiple_purchases.csv"
 write.csv(amazon_user_index, file = "data/amazon_user_index.csv", row.names = FALSE)
 write.csv(user_counts, file = "data/user_counts.csv", row.names = FALSE)
 ```
-
 
 # Reccomender Systems
 
@@ -255,11 +252,13 @@ rec_data.reset_index(drop=True, inplace=True)
 category = rec_data["category"].astype(str)
 tfv_matrix = tfv.fit_transform(category)
 ```
+
 ```{python}
 from sklearn.metrics.pairwise import sigmoid_kernel
 sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
 rec_indices = pd.Series(rec_data.index, index = rec_data["product_name"]).drop_duplicates()
 ```
+
 ```{python}
 def give_recommendation(product_name, sig = sig):
     
@@ -281,9 +280,11 @@ def give_recommendation(product_name, sig = sig):
     
     return dataframe
 ```
+
 ```{python}
 give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Data Sync Cable Compatible for iPhone 13, 12,11, X, 8, 7, 6, 5, iPad Air, Pro, Mini (3 FT Pack of 1, Grey)")
 ```
+
 # Item-Item Similarity Recommender System
 
 ```{python}
@@ -305,7 +306,6 @@ row_data <- amazon_multiple_purchases %>%
 
 print(row_data)
 ```
-
 
 ```{python}
 def get_similar_items(item, item_similarity_df, top_n=10):
