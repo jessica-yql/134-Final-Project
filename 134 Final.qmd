@@ -95,26 +95,32 @@ summary(amazon)
 
 \<\<\<\<\<\<\< HEAD
 
-### NLP graphs:
+### Most common words in reivews:
+
+For this part, we will work with some essay data from our dataset review column. 
+
+To achieve this process with nlp process, first step is to do some transformations and cleaning. 
 
 ```{r}
-# Select relevant columns and clean it
-# there is no missing value
+# Select relevant columns and do some cleaning for nlp
+# Given that there is no missing value in our data
 amazon_review_title <- amazon %>%
   select(review_title) %>%
   mutate(review_title = tolower(review_title) %>% str_replace_all('[[:punct:]]', ''))
 
-# Tokenization
+# Tokenize the data into words
 amazon_tokens <- amazon_review_title %>%
   unnest_tokens(word, review_title)
-
 
 # Remove stop words
 data("stop_words")
 
 amazon_clean <- amazon_tokens %>%
   anti_join(stop_words, by = "word")
+```
 
+Now we can create a visualization of the most common words with our data.   
+```{r}
 # Plot the most Common Words
 top_words <- amazon_clean %>%
   count(word, sort = TRUE) %>%
@@ -125,12 +131,19 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   coord_flip() +
   labs(title = "Top 20 Most Common Words in Review Titles", x = "Words", y = "Frequency") +
   theme_minimal()
+```
 
-# Clean
+Let's do the visualization in a more interesting way.  
+```{r}
+# using wordcloud
 amazon_clean %>%
   count(word) %>%
   with(wordcloud(word, n, max.words = 100, scale = c(4, 0.5), colors = brewer.pal(8, "Dark2")))
+```
 
+Here, we can easily find the most common words including "produce","quality", but sometimes for a recommender system this is not what we want. We need to focus more on the attitudes of customers hidden behind their reviews. In this case, we can use sentiment analysis to visualize.  
+
+```{r,fig.width=7, fig.height=5}
 # Sentiment Analysis
 amazon_sentiment <- amazon_clean %>%
   inner_join(get_sentiments("bing"), by = "word") %>%
@@ -138,7 +151,7 @@ amazon_sentiment <- amazon_clean %>%
 
 amazon_sentiment %>%
   acast(word ~ sentiment, value.var = "n", fill = 0) %>%
-  comparison.cloud(colors = c("red", "blue"), max.words = 100)
+  comparison.cloud(colors = c("tomato", "blue"), max.words = 100)
 
 # Most common Bigrams
 amazon_bigrams <- amazon_review_title %>%
@@ -150,10 +163,12 @@ amazon_bigrams %>%
   count(bigram, sort = TRUE) %>%
   head(20) %>%
   ggplot(aes(x = reorder(bigram, n), y = n)) +
-  geom_col(fill = "coral") +
+  geom_col(fill = "green") +
   coord_flip() +
   labs(title = "Top 20 Most Common Bigrams", x = "Bigrams", y = "Count")
 ```
+
+Here we have more valuable words in the graph and from the most common 20 bigrams graph, we can claim that our data must contain more information about devices&accessories or people who buying devices&accessories tend to leave reviews.  
 
 =======
 
@@ -222,7 +237,7 @@ write.csv(amazon_user_index, file = "data/amazon_user_index.csv", row.names = FA
 write.csv(user_counts, file = "data/user_counts.csv", row.names = FALSE)
 ```
 
-# Reccomender Systems
+# Recommender Systems
 
 ```{python}
 from scipy.sparse import csr_matrix
