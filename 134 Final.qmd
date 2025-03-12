@@ -340,4 +340,47 @@ def get_similar_items(item, item_similarity_df, top_n=10):
 print(get_similar_items('Wayona Nylon Braided USB Data Sync and Fast Charging 3A Short Power Bank Cable For iPhones, iPad Air, iPad mini, iPod Nano and iPod Touch (Grey)', item_similarity_df, top_n=5))
 ```
 
+```{r}
+library(ggplot2)
+
+# clean  remove non-digit characters 
+amazon$discount_percentage <- as.numeric(gsub("[^0-9]", "", amazon$discount_percentage))
+
+amazon$rating_count <- as.numeric(gsub("[^0-9.]", "", amazon$rating_count))
+options(scipen = 999) # taking of scientific cnotation
+
+# Rating vs Actual Price
+ggplot(amazon, aes(x = actual_price, y = rating)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", color = "darkblue", se = FALSE) +
+  labs(title = "Rating vs Actual Price",
+       x = "Actual Price",
+       y = "Rating") +
+  theme_minimal()
+
+# Discounted Price vs Actual Price
+ggplot(amazon, aes(x = actual_price, y = discounted_price)) +
+  geom_point(alpha = 0.5, color = "red") +
+  geom_smooth(method = "lm", color = "darkred", se = FALSE) +
+  labs(title = "Discounted Price vs Actual Price",
+       x = "Actual Price",
+       y = "Discounted Price") +
+  theme_minimal()
+
+# discount percentage vs rating
+ggplot(amazon, aes(x = discount_percentage, y = rating)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", color = "purple4", se = FALSE) +
+  labs(title = "Discounted Percentage vs Rating",
+       x = "Discounted Percentage",
+       y = "Rating") +
+  theme_minimal()
+
+```
+In the first graph, we see the relationship between product ratings and actual prices. Although the overall correlation is weak, since many lower priced items span the entire range of ratings, it is notable that all products with ratings below 3 are found in the lower price segment. Moreover, apart from a few outliers, almost all products priced above $30,000 have ratings above 4. This widespread distribution of lower priced products across various ratings confirms that there is no strong overall correlation.
+
+The second graph illustrates the relationship between discounted price and actual price. This graph reveals a much stronger positive correlation as the actual price increases the the discounted price increases as well. Finally, when comparing the discounted percentage with ratings, the trend line exhibits only a very slight negative slope, suggesting that lower ratings are modestly associated with higher discount percentages.
+
+
+
 =======
