@@ -97,9 +97,9 @@ summary(amazon)
 
 ### Most common words in reivews:
 
-For this part, we will work with some essay data from our dataset review column. 
+For this part, we will work with the review column of the data from our data set.
 
-To achieve this process with nlp process, first step is to do some transformations and cleaning. 
+We will achieve by using the NLP process, first step is to do some transformations and cleaning.
 
 ```{r}
 # Select relevant columns and do some cleaning for nlp
@@ -119,7 +119,8 @@ amazon_clean <- amazon_tokens %>%
   anti_join(stop_words, by = "word")
 ```
 
-Now we can create a visualization of the most common words with our data.   
+Now we can create a visualization of the most common words with our data.
+
 ```{r}
 # Plot the most Common Words
 top_words <- amazon_clean %>%
@@ -133,7 +134,8 @@ ggplot(top_words, aes(x = reorder(word, n), y = n)) +
   theme_minimal()
 ```
 
-Let's do the visualization in a more interesting way.  
+Let's do the visualization in a more interesting way.
+
 ```{r}
 # using wordcloud
 amazon_clean %>%
@@ -141,7 +143,7 @@ amazon_clean %>%
   with(wordcloud(word, n, max.words = 100, scale = c(4, 0.5), colors = brewer.pal(8, "Dark2")))
 ```
 
-Here, we can easily find the most common words including "produce","quality", but sometimes for a recommender system this is not what we want. We need to focus more on the attitudes of customers hidden behind their reviews. In this case, we can use sentiment analysis to visualize.  
+Here, we can easily find the most common words including "produce","quality", but sometimes for a recommender system this is not what we want. We need to focus more on the attitudes of customers hidden behind their reviews. In this case, we can use sentiment analysis to visualize.
 
 ```{r,fig.width=7, fig.height=5}
 # Sentiment Analysis
@@ -168,11 +170,11 @@ amazon_bigrams %>%
   labs(title = "Top 20 Most Common Bigrams", x = "Bigrams", y = "Count")
 ```
 
-Here we have more valuable words in the graph and from the most common 20 bigrams graph, we can claim that our data must contain more information about devices&accessories or people who buying devices&accessories tend to leave reviews.  
+Here we have more valuable words in the graph and from the most common 20 bigrams graph, we can claim that our data must contain more information about devices&accessories or people who buying devices&accessories tend to leave reviews.
 
 =======
 
-### Price vs. Discount Percentage
+### Actual Price vs. Discount Percentage
 
 ```{r}
 amazon_filtered <- amazon %>%
@@ -188,25 +190,37 @@ ggplot(amazon_filtered, aes(x = actual_price, y = discount_percentage)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate labels for clarity
 ```
 
-Price vs. Discount Percentage graph shows the relationship between a product's actual price and the discount percentage it receives.
+Price vs. Discount Percentage graph shows the relationship between a product's actual price and the discount percentage it receives. Products at all price points receive discounts, but higher-priced products show more variation in discounts. Higher prices have more discount this suggests that expensive products often receive more discounts, likely to make them more attractive. While low prices have lower discounts indicating that cheaper items may already be priced competitively.
 
-X-axis: Actual Price (₹) (Log Scale) – Product prices are shown on a logarithmic scale, making it easier to see patterns across different price ranges.
+=======
 
-Y-axis: Discount (%) – The percentage discount applied to each product.
+### Rating vs. Actual Price
 
--   Products at all price points receive discounts, but higher-priced products show more variation in discounts.
+```{r}
+ggplot(amazon, aes(x = actual_price, y = rating)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_smooth(method = "lm", color = "darkblue", se = FALSE) +
+  labs(title = "Rating vs Actual Price",
+       x = "Actual Price",
+       y = "Rating") +
+  theme_minimal()
+```
 
-Higher Prices Have More Discount
+In the first graph, we see the relationship between product ratings and actual prices. Although the overall correlation is weak, since many lower priced items span the entire range of ratings, it is notable that all products with ratings below 3 are found in the lower price segment. Moreover, apart from a few outliers, almost all products priced above \$30,000 have ratings above 4. This widespread distribution of lower priced products across various ratings confirms that there is no strong overall correlation..
 
--   This suggests that expensive products often receive more discounts, likely to make them more attractive
+### Discount Percentage vs. Rating
 
-Low Prices Have Lower Discounts
+```{r}
+ggplot(amazon, aes(x = discount_percentage, y = rating)) +
+  geom_point(alpha = 0.5, color = "purple") +
+  geom_smooth(method = "lm", color = "purple4", se = FALSE) +
+  labs(title = "Discounted Percentage vs Rating",
+       x = "Discounted Percentage",
+       y = "Rating") +
+  theme_minimal()
+```
 
--   Indicating that cheaper items may already be priced competitively.
-
-Outliers
-
--   There are some high-discount outliers at lower price levels, which could be clearance sales or special promotions.
+This scatter plot visualizes the relationship between Discount Percentage (x-axis) and Product Rating (y-axis). The data represent individual products, while the trend line indicates a slight negative correlation—meaning that as discount percentages increase, ratings tend to decrease slightly. However, the trend is not very strong, as most ratings cluster around 4.0, regardless of discount level. This suggests that while higher discounts might be associated with slightly lower-rated products, the effect is minimal, and other factors likely influence product ratings more significantly.
 
 ```{r}
 remove <- c('[[:punct:]]',
@@ -237,7 +251,7 @@ write.csv(amazon_user_index, file = "data/amazon_user_index.csv", row.names = FA
 write.csv(user_counts, file = "data/user_counts.csv", row.names = FALSE)
 ```
 
-# Recommender Systems
+# Recommended Systems
 
 ```{python}
 from scipy.sparse import csr_matrix
@@ -254,7 +268,9 @@ amazon = pd.read_csv('data/cleaned_amazon.csv')
 multiple_purchases = pd.read_csv('data/amazon_multiple_purchases.csv')
 ```
 
-# Content Based
+## Content Based
+
+A content-based recommendation system is a type of recommendation system that suggests items to users based on their past interactions and preferences. It works by analyzing the features of items (such as product descriptions, genres, or keywords) and matching them with what a user has previously liked. The system uses machine learning and natural language processing to compare item similarities and suggest the most relevant ones.
 
 ```{python}
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -302,9 +318,9 @@ def give_recommendation(product_name, sig = sig):
 give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Data Sync Cable Compatible for iPhone 13, 12,11, X, 8, 7, 6, 5, iPad Air, Pro, Mini (3 FT Pack of 1, Grey)")
 ```
 
-# Item-Item Similarity Recommender System
+## Item-Item Similarity Recommender System
 
-gives recommendations based on items that have been bought together.
+An **Item-Item Similarity Recommender System** suggests products by comparing how similar they are to items a user has already interacted with. Instead of focusing on users, this system finds relationships between items based on **user behavior**—such as purchases, ratings, or clicks. For example, if a student buys a **mechanical keyboard**, the system might recommend a **gaming mouse or a laptop stand** because other students who bought a keyboard also purchased these items.
 
 ```{python}
 user_item_matrix = pd.crosstab(multiple_purchases['user_name'], multiple_purchases['product_name'])
@@ -318,7 +334,6 @@ item_similarity_df = pd.DataFrame(item_similarity,
                                   index=user_item_matrix.columns, 
                                   columns=user_item_matrix.columns)
 ```
-
 
 ```{python}
 def get_similar_items(item, item_similarity_df, top_n=10):
@@ -340,47 +355,6 @@ def get_similar_items(item, item_similarity_df, top_n=10):
 print(get_similar_items('Wayona Nylon Braided USB Data Sync and Fast Charging 3A Short Power Bank Cable For iPhones, iPad Air, iPad mini, iPod Nano and iPod Touch (Grey)', item_similarity_df, top_n=5))
 ```
 
-```{r}
-library(ggplot2)
-
-# clean  remove non-digit characters 
-amazon$discount_percentage <- as.numeric(gsub("[^0-9]", "", amazon$discount_percentage))
-
-amazon$rating_count <- as.numeric(gsub("[^0-9.]", "", amazon$rating_count))
-options(scipen = 999) # taking of scientific cnotation
-
-# Rating vs Actual Price
-ggplot(amazon, aes(x = actual_price, y = rating)) +
-  geom_point(alpha = 0.5, color = "blue") +
-  geom_smooth(method = "lm", color = "darkblue", se = FALSE) +
-  labs(title = "Rating vs Actual Price",
-       x = "Actual Price",
-       y = "Rating") +
-  theme_minimal()
-
-# Discounted Price vs Actual Price
-ggplot(amazon, aes(x = actual_price, y = discounted_price)) +
-  geom_point(alpha = 0.5, color = "red") +
-  geom_smooth(method = "lm", color = "darkred", se = FALSE) +
-  labs(title = "Discounted Price vs Actual Price",
-       x = "Actual Price",
-       y = "Discounted Price") +
-  theme_minimal()
-
-# discount percentage vs rating
-ggplot(amazon, aes(x = discount_percentage, y = rating)) +
-  geom_point(alpha = 0.5, color = "purple") +
-  geom_smooth(method = "lm", color = "purple4", se = FALSE) +
-  labs(title = "Discounted Percentage vs Rating",
-       x = "Discounted Percentage",
-       y = "Rating") +
-  theme_minimal()
-
-```
-In the first graph, we see the relationship between product ratings and actual prices. Although the overall correlation is weak, since many lower priced items span the entire range of ratings, it is notable that all products with ratings below 3 are found in the lower price segment. Moreover, apart from a few outliers, almost all products priced above $30,000 have ratings above 4. This widespread distribution of lower priced products across various ratings confirms that there is no strong overall correlation.
-
-The second graph illustrates the relationship between discounted price and actual price. This graph reveals a much stronger positive correlation as the actual price increases the the discounted price increases as well. Finally, when comparing the discounted percentage with ratings, the trend line exhibits only a very slight negative slope, suggesting that lower ratings are modestly associated with higher discount percentages.
-
-
-
 =======
+
+# **Conclusion**
