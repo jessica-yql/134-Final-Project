@@ -12,13 +12,13 @@ In this project, our group aims to develop a recommendation system using an Amaz
 
 ## Data Description
 
-We obtain our data set on Kaggle. The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings. We are focusing on the variables required for content filtering, which are **review_id**, **user_id**, **product_id**, and **rating**. These variables will help us analyze user preferences and product recommendations effectively. This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
+We obtain our data set on Kaggle. The data set contains **1,465** entries with **16 columns**, providing information about Amazon products, user reviews, and ratings. We are focusing on the variables required for content filtering, which are **category**, **user_id**, **product_name**, and **product_id**. These variables will help us analyze user preferences and product recommendations effectively. This data set provides valuable insights into consumer behavior, product popularity, and user preferences, making it an ideal choice for developing a recommendation system.
 
 ## Methodology
 
 **Methodology Summary for Recommendation Systems**
 
-There are two primary types of recommendation systems:
+We use the two primary types of recommendation systems:
 
 1\. **Content-Based Filtering (Chosen for Our Project)**
 
@@ -26,9 +26,9 @@ There are two primary types of recommendation systems:
 
 -   Each product's features (e.g., category, price, description, and ratings) are transformed into numerical vectors.
 
--   The similarity between items is computed using **cosine similarity**, which measures how closely related two products are based on their feature vectors.
+-   The similarity between items is computed using **sigmoid kernel similarity**, which measures how closely related two products are based on their feature vectors.
 
--   The system recommends items that are most similar to those the user has previously interacted with
+-   The system recommends items that are most similar to those the user has interacted with.
 
 2\. **Collaborative Filtering**
 
@@ -36,7 +36,7 @@ There are two primary types of recommendation systems:
 
 -   It can be **user-based**, where users with similar preferences are grouped together, or **item-based**, where products with similar rating patterns are recommended.
 
--   Sigmoid Kernel similarity is also used in this method to determine relationships between users or items.
+-   **Cosine similarity** is used in this method to determine relationships between items.
 
 # Exploring Our Data
 
