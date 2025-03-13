@@ -270,7 +270,7 @@ multiple_purchases = pd.read_csv('data/amazon_multiple_purchases.csv')
 
 ## Content Based
 
-A content-based recommendation system is a type of recommendation system that suggests items to users based on their past interactions and preferences. It works by analyzing the features of items (such as product descriptions, genres, or keywords) and matching them with what a user has previously liked. The system uses machine learning and natural language processing to compare item similarities and suggest the most relevant ones.
+In **content-based filtering**, recommendations are made based on the features of the items themselves. Products are recommended to users based on their similarity to the items the user has shown interest in, using features like product category, description, etc. This recommender system is analyzing the similarity between products' categories (which are text-based features) and recommending products that are similar based on their category similarity. 
 
 ```{python}
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -286,11 +286,15 @@ category = rec_data["category"].astype(str)
 tfv_matrix = tfv.fit_transform(category)
 ```
 
+The system is using **TF-IDF** (Term Frequency-Inverse Document Frequency) to process the category text data. The TfidfVectorizer is used to convert the textual data (in this case, the "category" variable of the products) into numerical vectors that represent the importance of each term in the category. These vectors capture the patterns of words used in different product categories, which helps in comparing their similarities.
+
 ```{python}
 from sklearn.metrics.pairwise import sigmoid_kernel
 sig = sigmoid_kernel(tfv_matrix, tfv_matrix)
 rec_indices = pd.Series(rec_data.index, index = rec_data["product_name"]).drop_duplicates()
 ```
+
+The **sigmoid kernel** is used to compute the similarity between these category vectors. The kernel measures the pairwise similarity between all items based on their category descriptions.
 
 ```{python}
 def give_recommendation(product_name, sig = sig):
@@ -311,16 +315,16 @@ def give_recommendation(product_name, sig = sig):
     
     print(f"Recommendations for {product_name} buyers :\n")
     
-    return dataframe
+    return dataframe.style.set_properties(**{"background-color": "white","color":"black","border": "1.5px  solid black"})
 ```
 
 ```{python}
 give_recommendation("Wayona Nylon Braided USB to Lightning Fast Charging and Data Sync Cable Compatible for iPhone 13, 12,11, X, 8, 7, 6, 5, iPad Air, Pro, Mini (3 FT Pack of 1, Grey)")
 ```
 
-## Item-Item Similarity Recommender System
+## Collaborative Filtering
 
-An **Item-Item Similarity Recommender System** suggests products by comparing how similar they are to items a user has already interacted with. Instead of focusing on users, this system finds relationships between items based on **user behavior**—such as purchases, ratings, or clicks. For example, if a student buys a **mechanical keyboard**, the system might recommend a **gaming mouse or a laptop stand** because other students who bought a keyboard also purchased these items.
+A **Collaborative Filtering** recommender system suggests items based on user-item interactions. It doesn't require information about the items themselves, but rather focuses on the patterns of **user behavior** and interactions. The following is an example of **Item Based Collaborative Filtering**, where recommendations are given based on items that are frequently bought together. 
 
 ```{python}
 user_item_matrix = pd.crosstab(multiple_purchases['user_name'], multiple_purchases['product_name'])
@@ -331,6 +335,8 @@ item_similarity_df = pd.DataFrame(item_similarity,
                                   index=user_item_matrix.columns, 
                                   columns=user_item_matrix.columns)
 ```
+
+Here, the **cosine similarity** between product purchase interactions (users and items) is used, which allows the system to measure how similarly products are being bought together. If two products are bought by many of the same users, they are considered similar.
 
 ```{python}
 def get_similar_items(item, item_similarity_df, top_n=10):
@@ -347,9 +353,11 @@ def get_similar_items(item, item_similarity_df, top_n=10):
 
     print(f"Recommendations for {item} buyers:\n")
     
-    return dataframe
+    return dataframe.style.set_properties(**{"background-color": "white","color":"black","border": "1.5px  solid black"})
+```
 
-print(get_similar_items('Wayona Nylon Braided USB Data Sync and Fast Charging 3A Short Power Bank Cable For iPhones, iPad Air, iPad mini, iPod Nano and iPod Touch (Grey)', item_similarity_df, top_n=5))
+```{python}
+get_similar_items('Wayona Nylon Braided USB Data Sync and Fast Charging 3A Short Power Bank Cable For iPhones, iPad Air, iPad mini, iPod Nano and iPod Touch (Grey)', item_similarity_df, top_n=10)
 ```
 
 =======
