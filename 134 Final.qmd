@@ -61,10 +61,14 @@ library(kableExtra)
 amazon <- read.csv("data/amazon.csv")
 ```
 
+Looking at a summary of the dataset, we can see that many of the variables that should be numerical are encoded as character variables. Additionally, there are fortunately no missing values.
+
 ```{r}
 summary(amazon)
 colSums(is.na(amazon))
 ```
+
+We amend the variable issue by converting them to numeric columns and cleaning the out the strings and symbols, then confirming that there are still no missing values.
 
 ```{r}
 # Mutate character variables into numeric
@@ -85,7 +89,7 @@ amazon <- amazon %>%
 colSums(is.na(amazon))
 ```
 
-posssible pca, nlp usage
+As we can see, the summary now displays the proper variables as numeric, and shows their baseline statistics.
 
 ```{r}
 summary(amazon)
@@ -222,6 +226,11 @@ ggplot(amazon, aes(x = discount_percentage, y = rating)) +
 
 This scatter plot visualizes the relationship between Discount Percentage (x-axis) and Product Rating (y-axis). The data represent individual products, while the trend line indicates a slight negative correlation—meaning that as discount percentages increase, ratings tend to decrease slightly. However, the trend is not very strong, as most ratings cluster around 4.0, regardless of discount level. This suggests that while higher discounts might be associated with slightly lower-rated products, the effect is minimal, and other factors likely influence product ratings more significantly.
 
+
+## Preparation for Recommender Systems
+
+Firstly, the category variable must be cleaned, as it is currently intelligible:
+
 ```{r}
 remove <- c('[[:punct:]]',
             '[[:symbol:]]'
@@ -233,6 +242,8 @@ amazon$category <- amazon$category %>%
   tolower() %>%
   str_replace_all("\\s+", " ")
 ```
+
+For the second system, a data frame is defined by users who have purchased multiple products, signifying that those products were bought together.
 
 ```{r}
 amazon_user_index <- amazon %>% 
