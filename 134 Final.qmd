@@ -374,3 +374,12 @@ get_similar_items('Wayona Nylon Braided USB Data Sync and Fast Charging 3A Short
 =======
 
 # **Conclusion**
+
+In conclusion, through this project we have successfully developed a recommendation system using an Amazon dataset. We were able to use machine learning to ultimately enhance user experience in the ecommerce market. We implemented both content-based filtering and collaborative filtering to recommend products based on product features and user behavior.
+
+Through content based filtering, we leverage the TF-IDF vectorization and sigmoid kernel similarity to recommend products based on textual attributes like categories and description. This method proved effective in identifying similar items to ensure personalized recommendations for users who have interacted with specific products.
+Similarly, through collaborative filtering, we analyzed user-item interactions and applied social similarity to find relationships between products frequently purchased together. Through this filtering we are also able to suggest items that align with past behaviors, making recommendations more dynamic and responsive to customer trends as they change. 
+
+Moreover, our exploratory data analysis gave us a deeper inside onto pricing, discount patterns, and sentiment analysis in product reviews. This all helped us understand strong factors and correlations that influence user decisions. 
+
+Overall, our recommendation system provides a foundation for strengthening product relationships in the e-commerce market. This project highlights the significance of data-driven personalization in modern digital marketplaces while also highlighting the impact of machine learning in improving online shopping experiences.
