@@ -2,6 +2,10 @@
 title: "Final Project 134"
 author: "Fion, Jessica, Dulce, Yikai"
 date: "2025-02-27"
+format: 
+  html:
+    embed-resources: true
+editor: visual
 ---
 
 # **Introduction to the Recommendation System Project**
